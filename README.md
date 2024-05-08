@@ -1,3 +1,3 @@
 # Core Node Part 2
-### Absolute-Relative path
+### 1. Absolute-Relative path
 - Explain with Code
