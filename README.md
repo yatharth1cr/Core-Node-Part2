@@ -2,4 +2,4 @@
 ### 1. Absolute-Relative path
 - Explain with Code
 ### 2. eventEmitters in node
-- Explain wit
+- Explain with code
