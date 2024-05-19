@@ -1,6 +1,36 @@
 const http = require("http");
+const fs = require("fs");
+const { json } = require("node:stream/consumers");
 
-function handleRequest(req, res) {}
+let userPath = __dirname + "/users/";
+
+function handleRequest(req, res) {
+  let store = "";
+
+  // on data the req
+  req.on("data", (chunk) => {
+    store += chunk;
+  });
+
+  // on end the req
+  req.on("end", () => {
+    if (req.method === "POST" && req.url === "/users") {
+      let userName = JSON.parse(store).username;
+      fs.open(userPath + userName + ".json", "wx", (err, fd) => {
+        if (err) return console.log(err);
+        fs.writeFile(fd, store, (err) => {
+          if (err) return console.log(err);
+          fs.close(fd, () => {
+            res.end(`${userName} created successfully`);
+          });
+        });
+      });
+    } else {
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      res.end("page not found");
+    }
+  });
+}
 
 const server = http.createServer(handleRequest);
 
