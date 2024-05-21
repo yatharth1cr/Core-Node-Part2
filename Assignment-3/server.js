@@ -1,11 +1,12 @@
 const http = require("http");
 const fs = require("fs");
-const { json } = require("node:stream/consumers");
+const url = require("url");
 
 let userPath = __dirname + "/users/";
 
 function handleRequest(req, res) {
   let store = "";
+  let parsedUrl = url.parse(req.url, true);
 
   // on data the req
   req.on("data", (chunk) => {
@@ -24,6 +25,13 @@ function handleRequest(req, res) {
             res.end(`${userName} created successfully`);
           });
         });
+      });
+    } else if (req.method === "GET" && parsedUrl.pathname === "/users") {
+      console.log("parsedUrldata: ", parsedUrl);
+      var userName = parsedUrl.query.username;
+      fs.readFile(userPath + userName + ".json", (err, content) => {
+        if (err) console.log(err);
+        res.end(content);
       });
     } else {
       res.writeHead(404, { "Content-Type": "text/plain" });
